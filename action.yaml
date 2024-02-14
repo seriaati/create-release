@@ -7,7 +7,6 @@ runs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-      id: save-tag
     - name: Compare remote and local versions
       run: |
         REMOTE_VERSION=`echo $(git describe --tags --abbrev=0) | cut -c 2-`
