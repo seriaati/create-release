@@ -33,7 +33,7 @@ runs:
       if: steps.compare-versions.outputs.LOCAL_VERSION != ''
       uses: tj-actions/git-cliff@v1
       with:
-        template-config: https://raw.githubusercontent.com/seriaati/seria-library/main/cliff-template.toml
+        template-config: https://raw.githubusercontent.com/seriaati/create-release/main/cliff-template.toml
         args: --latest --strip header
       id: git-cliff
     - name: Get changelog content
