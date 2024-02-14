@@ -48,7 +48,7 @@ commit_parsers = [
     { message = "^test", group = "Tests" },
     { message = "^chore\\(ver\\):", skip = true },
     { message = "^chore", group = "Miscellaneous Chores" },
-    { message = "^ci", group = "Continuous Integration" },
+    { message = "^ci", group = "Continuous Integrations" },
     { body = ".*security", group = "Security" },
 ]
 protect_breaking_commits = false
