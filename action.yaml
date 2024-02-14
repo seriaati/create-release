@@ -4,9 +4,6 @@ description: Create a release when the verion in pyproject.toml is different fro
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
     - name: Compare remote and local versions
       run: |
         REMOTE_VERSION=`echo $(git describe --tags --abbrev=0) | cut -c 2-`
