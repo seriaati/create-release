@@ -1,4 +1,4 @@
-name: Create release
+name: create-release
 description: Create a release when the verion in pyproject.toml is different from the latest tag's name, using git-cliff to generate the changelog.
 
 runs:
