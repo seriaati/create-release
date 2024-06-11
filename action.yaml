@@ -47,7 +47,9 @@ runs:
         body: ${{ steps.get-content.outputs.content }}
         tag_name: v${{ steps.compare-versions.outputs.LOCAL_VERSION }}
     - name: Publish to PyPI
-      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && ${{ secrets.PYPI_TOKEN }} != ''
+      env:
+        pypi_token: ${{ secrets.PYPI_TOKEN }}
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && ${{ env.pypi_token }} != ''
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         password: ${{ secrets.PYPI_TOKEN }}
