@@ -1,5 +1,10 @@
 name: create-release
 description: Create a release when the verion in pyproject.toml is different from the latest tag's name, using git-cliff to generate the changelog.
+inputs:
+  pypi_token:
+    description: "PyPI token"
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -46,10 +51,11 @@ runs:
       with:
         body: ${{ steps.get-content.outputs.content }}
         tag_name: v${{ steps.compare-versions.outputs.LOCAL_VERSION }}
+    - name: Install poetry
+      uses: Gr1N/setup-poetry@v8
     - name: Publish to PyPI
-      env:
-        pypi_token: ${{ secrets.PYPI_TOKEN }}
-      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && ${{ env.pypi_token }} != ''
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        password: ${{ secrets.PYPI_TOKEN }}
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != ''
+      run: |
+        poetry config pypi-token.pypi ${{ inputs.pypi_token }}
+        poetry publish --build
+      shell: bash
