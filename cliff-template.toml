@@ -50,6 +50,7 @@ commit_parsers = [
     { message = "^chore\\(l10n\\):", skip = true },
     { message = "^chore", group = "Miscellaneous Chores" },
     { message = "^ci", group = "Continuous Integrations" },
+    { message = "^imp", group = "Improvements" },
     { body = ".*security", group = "Security" },
 ]
 protect_breaking_commits = false
