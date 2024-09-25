@@ -81,6 +81,6 @@ runs:
     - name: Publish to PyPI with uv
       if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv != ''
       run: |
-        uv build
+        uv build -p ${{ inputs.python_version }}
         uv publish --token ${{ inputs.pypi_token }}
       shell: bash
