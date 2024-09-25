@@ -9,6 +9,10 @@ inputs:
     description: "Python version"
     required: false
     default: "3.11"
+  uv:
+    description: "uv version"
+    required: false
+    default: ""
 
 runs:
   using: composite
