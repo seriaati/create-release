@@ -63,9 +63,20 @@ runs:
     - name: Install poetry
       if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != ''
       uses: Gr1N/setup-poetry@v8
-    - name: Publish to PyPI
+    - name: Publish to PyPI with Poetry
       if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != ''
       run: |
         poetry config pypi-token.pypi ${{ inputs.pypi_token }}
         poetry publish --build
+      shell: bash
+    - name: Install uv
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv != ''
+      uses: astral-sh/setup-uv@v2
+      with:
+        version: ${{ inputs.inputs.uv }}
+    - name: Publish to PyPI with uv
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv != ''
+      run: |
+        uv build
+        uv publish --token ${{ inputs.pypi_token }}
       shell: bash
