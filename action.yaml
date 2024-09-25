@@ -10,7 +10,7 @@ inputs:
     required: false
     default: "3.11"
   uv:
-    description: "uv version"
+    description: "Use uv"
     required: false
     default: ""
 
@@ -74,12 +74,10 @@ runs:
         poetry publish --build
       shell: bash
     - name: Install uv
-      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv != ''
+      if: inputs.pypi_token != '' && inputs.uv != ''
       uses: astral-sh/setup-uv@v3
-      with:
-        version: ${{ inputs.inputs.uv }}
     - name: Publish to PyPI with uv
-      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv != ''
+      if: inputs.pypi_token != '' && inputs.uv != ''
       run: |
         uv build -p ${{ inputs.python_version }}
         uv publish --token ${{ inputs.pypi_token }}
