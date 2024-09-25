@@ -60,15 +60,15 @@ runs:
         body: ${{ steps.get-content.outputs.content }}
         tag_name: v${{ steps.compare-versions.outputs.LOCAL_VERSION }}
     - name: Install Python
-      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != ''
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv == ''
       uses: actions/setup-python@v5
       with:
         python-version: ${{ inputs.python_version }}
     - name: Install poetry
-      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != ''
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv == ''
       uses: Gr1N/setup-poetry@v8
     - name: Publish to PyPI with Poetry
-      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != ''
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv == ''
       run: |
         poetry config pypi-token.pypi ${{ inputs.pypi_token }}
         poetry publish --build
