@@ -60,7 +60,7 @@ runs:
         body: ${{ steps.get-content.outputs.content }}
         tag_name: v${{ steps.compare-versions.outputs.LOCAL_VERSION }}
     - name: Install Python
-      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv == ''
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != ''
       uses: actions/setup-python@v5
       with:
         python-version: ${{ inputs.python_version }}
@@ -75,7 +75,7 @@ runs:
       shell: bash
     - name: Install uv
       if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv != ''
-      uses: astral-sh/setup-uv@v2
+      uses: astral-sh/setup-uv@v3
       with:
         version: ${{ inputs.inputs.uv }}
     - name: Publish to PyPI with uv
