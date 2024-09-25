@@ -74,10 +74,10 @@ runs:
         poetry publish --build
       shell: bash
     - name: Install uv
-      if: inputs.pypi_token != '' && inputs.uv != ''
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv != ''
       uses: astral-sh/setup-uv@v3
     - name: Publish to PyPI with uv
-      if: inputs.pypi_token != '' && inputs.uv != ''
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv != ''
       run: |
         uv build -p ${{ inputs.python_version }}
         uv publish --token ${{ inputs.pypi_token }}
