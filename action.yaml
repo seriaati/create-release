@@ -9,10 +9,10 @@ inputs:
     description: "Python version"
     required: false
     default: "3.11"
-  uv:
-    description: "Use uv"
+  tool:
+    description: "uv or poetry"
     required: false
-    default: ""
+    default: "poetry"
 
 runs:
   using: composite
@@ -65,19 +65,19 @@ runs:
       with:
         python-version: ${{ inputs.python_version }}
     - name: Install poetry
-      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv == ''
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.tool == 'poetry'
       uses: Gr1N/setup-poetry@v8
     - name: Publish to PyPI with Poetry
-      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv == ''
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.tool == 'poetry'
       run: |
         poetry config pypi-token.pypi ${{ inputs.pypi_token }}
         poetry publish --build
       shell: bash
     - name: Install uv
-      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv != ''
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.tool == 'uv'
       uses: astral-sh/setup-uv@v3
     - name: Publish to PyPI with uv
-      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv != ''
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.uv == 'uv'
       run: |
         uv build -p ${{ inputs.python_version }}
         uv publish --token ${{ inputs.pypi_token }}
