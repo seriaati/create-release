@@ -13,62 +13,10 @@ inputs:
     description: "uv or poetry"
     required: false
     default: "poetry"
-  update:
-    description: "Update the version in pyproject.toml"
-    required: false
-    default: "false"
 
 runs:
   using: composite
   steps:
-    - name: Checkout Repository
-      if: inputs.update == 'true'
-      uses: actions/checkout@v4
-      with:
-        # Ensure the token is not persisted to avoid credential issues when pushing changes.
-        persist-credentials: false
-        fetch-depth: 0
-
-    - name: Install uv
-      if: inputs.update == 'true' || inputs.tool == 'uv'
-      uses: astral-sh/setup-uv@v5
-
-    - name: Set up Python
-      if: inputs.update == 'true'
-      run: uv python install && uv venv
-      shell: bash
-
-    - name: Install GitPython
-      if: inputs.update == 'true'
-      run: uv pip install gitpython
-      shell: bash
-
-    - name: Run biweekly_release.py
-      if: inputs.update == 'true'
-      run: uv run biweekly_release.py
-      shell: bash
-
-    - name: Update uv.lock
-      if: inputs.update == 'true'
-      run: uv lock
-      shell: bash
-
-    - name: Commit changes
-      if: inputs.update == 'true'
-      run: |
-        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-        git add pyproject.toml
-        git diff --quiet && git diff --staged --quiet || (git commit -m "chore(ver): Bump version")
-      shell: bash
-
-    - name: Push changes
-      if: inputs.update == 'true'
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
-
     - name: Compare remote and local versions
       run: |
         REMOTE_VERSION=`echo $(git describe --tags --abbrev=0) | cut -c 2-`
@@ -84,14 +32,12 @@ runs:
         echo "EOF" >> $GITHUB_OUTPUT
       shell: bash
       id: compare-versions
-
     - name: Create tag locally
       if: steps.compare-versions.outputs.LOCAL_VERSION != ''
       run: |
         git tag v${{ steps.compare-versions.outputs.LOCAL_VERSION }}
       id: create-tag
       shell: bash
-
     - name: Generate changelog
       if: steps.compare-versions.outputs.LOCAL_VERSION != ''
       uses: tj-actions/git-cliff@v1
@@ -99,7 +45,6 @@ runs:
         template-config: https://raw.githubusercontent.com/seriaati/create-release/main/cliff-template.toml
         args: --latest --strip header
       id: git-cliff
-
     - name: Get changelog content
       if: steps.compare-versions.outputs.LOCAL_VERSION != ''
       run: |
@@ -108,31 +53,29 @@ runs:
         echo "EOF" >>$GITHUB_OUTPUT
       shell: bash
       id: get-content
-
     - name: Create Release
       if: steps.compare-versions.outputs.LOCAL_VERSION != ''
       uses: softprops/action-gh-release@4634c16e79c963813287e889244c50009e7f0981
       with:
         body: ${{ steps.get-content.outputs.content }}
         tag_name: v${{ steps.compare-versions.outputs.LOCAL_VERSION }}
-
     - name: Install Python
       if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != ''
       uses: actions/setup-python@v5
       with:
         python-version: ${{ inputs.python_version }}
-
     - name: Install poetry
       if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.tool == 'poetry'
       uses: Gr1N/setup-poetry@v8
-
     - name: Publish to PyPI with Poetry
       if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.tool == 'poetry'
       run: |
         poetry config pypi-token.pypi ${{ inputs.pypi_token }}
         poetry publish --build
       shell: bash
-
+    - name: Install uv
+      if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.tool == 'uv'
+      uses: astral-sh/setup-uv@v3
     - name: Publish to PyPI with uv
       if: steps.compare-versions.outputs.LOCAL_VERSION != '' && inputs.pypi_token != '' && inputs.tool == 'uv'
       run: |
