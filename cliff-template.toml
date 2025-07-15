@@ -2,7 +2,7 @@
 body = """
 {% if version %}\
     {% if previous.version %}\
-        # [{{ version | trim_start_matches(pat="v") }}](REPOSITORY_URL/compare/{{ previous.version }}..{{ version }}) - {{ timestamp | date(format="%Y-%m-%d") }}
+        # [{{ version | trim_start_matches(pat="v") }}](https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}/compare/{{ previous.version }}..{{ version }}) - {{ timestamp | date(format="%Y-%m-%d") }}
     {% else %}\
         # [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
     {% endif %}\
@@ -15,14 +15,14 @@ body = """
     | filter(attribute="scope")
     | sort(attribute="scope") %}
         - **({{commit.scope}})**{% if commit.breaking %} [**breaking**]{% endif %} \
-            {{ commit.message }} - ([{{ commit.id | truncate(length=7, end="") }}](REPOSITORY_URL/commit/{{ commit.id }}))
+            {{ commit.message }} - ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}/commit/{{ commit.id }}))
     {%- endfor -%}
     {% raw %}\n{% endraw %}\
     {%- for commit in commits %}
         {%- if commit.scope -%}
         {% else -%}
             - {% if commit.breaking %} [**breaking**]{% endif %}\
-                {{ commit.message }} - ([{{ commit.id | truncate(length=7, end="") }}](REPOSITORY_URL/commit/{{ commit.id }}))
+                {{ commit.message }} - ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}/commit/{{ commit.id }}))
         {% endif -%}
     {% endfor -%}
 {% endfor %}\n
@@ -34,8 +34,8 @@ conventional_commits = true
 filter_unconventional = true
 split_commits = false
 commit_preprocessors = [
-    { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "([#${2}](REPOSITORY_URL/issues/${2}))"},
-    { pattern = "Merge pull request #([0-9]+) from [^ ]+", replace = "PR [#${1}](REPOSITORY_URL/pull/${1}):"},
+    { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "([#${2}](https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}/issues/${2}))"},
+    { pattern = "Merge pull request #([0-9]+) from [^ ]+", replace = "PR [#${1}](https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}/pull/${1}):"},
 ]
 commit_parsers = [
     { message = "^feat", group = "Features" },
