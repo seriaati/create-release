@@ -45,6 +45,7 @@ runs:
       uses: orhun/git-cliff-action@v4
       with:
         args: --latest --strip header --config-url https://raw.githubusercontent.com/seriaati/create-release/main/cliff-template.toml
+        version: v2.9.0
       id: git-cliff
 
     - name: Create Release
