@@ -48,20 +48,11 @@ runs:
         args: --latest --strip header
       id: git-cliff
 
-    - name: Get changelog content
-      if: steps.compare-versions.outputs.LOCAL_VERSION != ''
-      run: |
-        echo "content<<EOF" >>$GITHUB_OUTPUT
-        cat "HISTORY.md" >>$GITHUB_OUTPUT
-        echo "EOF" >>$GITHUB_OUTPUT
-      shell: bash
-      id: get-content
-
     - name: Create Release
       if: steps.compare-versions.outputs.LOCAL_VERSION != ''
       uses: softprops/action-gh-release@4634c16e79c963813287e889244c50009e7f0981
       with:
-        body: ${{ steps.get-content.outputs.content }}
+        body: ${{ steps.git-cliff.outputs.content }}
         tag_name: v${{ steps.compare-versions.outputs.LOCAL_VERSION }}
 
     - name: Install Python with specified version
