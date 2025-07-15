@@ -33,10 +33,6 @@ trim = true
 conventional_commits = true
 filter_unconventional = true
 split_commits = false
-commit_preprocessors = [
-    { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "([#${2}](https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}/issues/${2}))"},
-    { pattern = "Merge pull request #([0-9]+) from [^ ]+", replace = "PR [#${1}](https://github.com/{{ remote.github.owner }}/{{ remote.github.repo }}/pull/${1}):"},
-]
 commit_parsers = [
     { message = "^feat", group = "Features" },
     { message = "^fix", group = "Bug Fixes" },
