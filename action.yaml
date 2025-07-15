@@ -44,8 +44,7 @@ runs:
       if: steps.compare-versions.outputs.LOCAL_VERSION != ''
       uses: orhun/git-cliff-action@v4
       with:
-        config-url: https://raw.githubusercontent.com/seriaati/create-release/main/cliff-template.toml
-        args: --latest --strip header
+        args: --latest --strip header --config-url https://raw.githubusercontent.com/seriaati/create-release/main/cliff-template.toml
       id: git-cliff
 
     - name: Create Release
