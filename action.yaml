@@ -42,9 +42,9 @@ runs:
 
     - name: Generate changelog
       if: steps.compare-versions.outputs.LOCAL_VERSION != ''
-      uses: tj-actions/git-cliff@v1.5.0
+      uses: orhun/git-cliff-action@v4
       with:
-        template-config: https://raw.githubusercontent.com/seriaati/create-release/main/cliff-template.toml
+        config-url: https://raw.githubusercontent.com/seriaati/create-release/main/cliff-template.toml
         args: --latest --strip header
       id: git-cliff
 
