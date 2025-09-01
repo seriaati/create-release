@@ -33,9 +33,6 @@ trim = true
 conventional_commits = true
 filter_unconventional = true
 split_commits = false
-commit_preprocessors = [
-  { pattern = ".*", replace = "${upper_first(message)}" }
-]
 commit_parsers = [
     { message = "^feat", group = "Features" },
     { message = "^fix", group = "Bug Fixes" },
